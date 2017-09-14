@@ -19,9 +19,10 @@ namespace Neptune.DataFrameExample
 
             SeriesArray seriesArray = new SeriesArray(new Series[] { openSeries, closeSeries });
 
-            // headers representing the 
+            // headers representing the different prices
             string[] headers = new string[] { "Open", "Close" };
 
+            // create a datafram and print it out
             DataFrame dataFrame = new DataFrame(seriesArray, headers, indexes);
             Console.WriteLine(dataFrame);
 
