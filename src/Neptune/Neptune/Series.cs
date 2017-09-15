@@ -5,22 +5,13 @@ using System.Linq;
 
 namespace Neptune
 {
-    public class Series
+    public struct Series
     {
         private object[] _data;
-        
-        public Series()
-        {
-            _data = new object[0];
-        }
 
-        public Series(object[] data = null)
-            : this()
+        public Series(object[] data)
         {
-            if (data != null)
-            {
-                _data = data;
-            }
+            _data = data;
         }
         
         /// <summary>
