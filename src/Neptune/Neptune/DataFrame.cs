@@ -7,8 +7,8 @@ namespace Neptune
 {
     public class DataFrame : DataFrameBase<SeriesArray>
     {
-        public DataFrame(SeriesArray array, string[] headers = null, string[] indexes = null)
-            : base(array, headers, indexes)
+        public DataFrame(SeriesArray array, string[] headers = null, string[] indexers = null)
+            : base(array, headers, indexers)
         { }
 
         /// <summary>
@@ -48,9 +48,7 @@ namespace Neptune
                     for (int i = 0; i < indexArray.Length; i++)
                     {
                         if (indexArray[i] > Headers.Length)
-                        {
                             throw new IndexOutOfRangeException(string.Format("Headers dose not contain the index {0}", indexArray[i]));
-                        }
 
                         headerArray[i] = Headers[indexArray[i]];
                     }
@@ -70,6 +68,51 @@ namespace Neptune
             }
         }
 
+        /// <summary>
+        /// Get a DataFrame with only the row specified by indexer
+        /// </summary>
+        /// <param name="indexer">String representing indexer of row to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame Loc(string indexer)
+        {
+            return Loc(new string[] { indexer });
+        }
+
+        /// <summary>
+        /// Get a DataFrame woth only the rows specified by indexers
+        /// </summary>
+        /// <param name="indexers">Array of strings representing indexers of rows to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame Loc(string[] indexers)
+        {
+            for (int i = 0; i < indexers.Length; i++)
+            {
+                if (!Indexers.Contains(indexers[i]))
+                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexers[i]));
+            }
+
+            Series[] series = new Series[Array.GetLength(1)];
+            for (int i = 0; i < indexers.Length; i++)
+            {
+                object[] data = new object[indexers.Length];
+                for (int j = 0; j < Array.GetLength(1); j++)
+                {
+                    data[j] = Array[i][indexers[j]];
+                }
+
+                series[i] = new Series(indexers, data);
+            }
+
+            SeriesArray seriesArray = new SeriesArray(series);
+
+            return new DataFrame(seriesArray, Headers, indexers);
+        }
+
+        /// <summary>
+        /// Get a DataFrame with only the column specified by header
+        /// </summary>
+        /// <param name="header">String representing the column by header</param>
+        /// <returns>A DataFrame</returns>
         public DataFrame this[string header]
         {
             get
@@ -79,9 +122,9 @@ namespace Neptune
         }
 
         /// <summary>
-        /// Get a DataFrame with only the columns specified by column header
+        /// Get a DataFrame with only the columns specified by headers
         /// </summary>
-        /// <param name="columnNames">Array of strings representing the colums</param>
+        /// <param name="headers">Array of strings representing the colums by headers</param>
         /// <returns>A DataFrame</returns>
         public DataFrame this[string[] headers]
         {
@@ -91,12 +134,11 @@ namespace Neptune
 
                 for (int i = 0; i < headers.Length; i++)
                 {
+                    if (!Headers.Contains(headers[i]))
+                        throw new IndexOutOfRangeException(string.Format("Headers dose not contain the index {0}", headers[i]));
+
                     var index = System.Array.FindIndex(Headers, x => x == headers[i]);
                     indexArray[i] = index;
-                    if (!Headers.Contains(headers[i]))
-                    {
-                        throw new IndexOutOfRangeException(string.Format("Headers dose not contain the index {0}", headers[i]));
-                    }
                 }
 
                 string[] headerArray = new string[indexArray.Length];
