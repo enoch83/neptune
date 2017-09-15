@@ -8,11 +8,6 @@ namespace Neptune
     {
         private readonly Series[] _array;
 
-        public SeriesArray(int length)
-        {
-            _array = new Series[length];
-        }
-
         public SeriesArray(Series[] array)
         {
             _array = array;
