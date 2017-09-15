@@ -26,6 +26,14 @@ namespace Neptune.DataFrameExample
             DataFrame dataFrame = new DataFrame(seriesArray, headers, indexes);
             Console.WriteLine(dataFrame);
 
+            // Based on dataFrame, select only column at index 1, the "Close" column
+            DataFrame closeDataFrame = dataFrame[1];
+            Console.WriteLine(closeDataFrame);
+
+            // It's also posible to select by header
+            DataFrame openDataFrame = dataFrame["Open"];
+            Console.WriteLine(openDataFrame);
+
             Console.ReadKey();
         }
     }

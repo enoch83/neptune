@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Neptune
 {
@@ -38,15 +39,38 @@ namespace Neptune
         }
         
         /// <summary>
-        /// Get item by key
+        /// Get or set object by key
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="key">key of object to get or set</param>
         /// <returns></returns>
-        public object this[string s]
+        public object this[string key]
         {
             get
             {
-                return _data[s];
+                return _data[key];
+            }
+            set
+            {
+                _data[key] = value;
+            }
+        }
+
+        /// <summary>
+        /// Get or set object by index
+        /// </summary>
+        /// <param name="i">index of object to get or set</param>
+        /// <returns>object</returns>
+        public object this[int index]
+        {
+            get
+            {
+                string key = _data.Keys.ToArray()[index];
+                return _data[key];
+            }
+            set
+            {
+                string key = _data.Keys.ToArray()[index];
+                _data[key] = value;
             }
         }
 
