@@ -7,8 +7,8 @@ namespace Neptune
 {
     public class DataFrame : DataFrameBase<SeriesArray>
     {
-        public DataFrame(SeriesArray array, string[] headers = null, string[] indexers = null)
-            : base(array, headers, indexers)
+        public DataFrame(SeriesArray series, string[] headers = null, string[] indexers = null)
+            : base(series, headers, indexers)
         { }
 
         /// <summary>
@@ -81,31 +81,31 @@ namespace Neptune
         /// <summary>
         /// Get a DataFrame woth only the rows specified by indexers
         /// </summary>
-        /// <param name="indexers">Array of strings representing indexers of rows to get</param>
+        /// <param name="indexerArray">Array of strings representing indexers of rows to get</param>
         /// <returns>A DataFrame</returns>
-        public DataFrame Loc(string[] indexers)
+        public DataFrame Loc(string[] indexerArray)
         {
-            for (int i = 0; i < indexers.Length; i++)
+            for (int i = 0; i < indexerArray.Length; i++)
             {
-                if (!Indexers.Contains(indexers[i]))
-                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexers[i]));
+                if (!Indexers.Contains(indexerArray[i]))
+                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexerArray[i]));
             }
 
             Series[] series = new Series[Array.GetLength(1)];
-            for (int i = 0; i < indexers.Length; i++)
+            for (int i = 0; i < indexerArray.Length; i++)
             {
-                object[] data = new object[indexers.Length];
+                object[] data = new object[indexerArray.Length];
                 for (int j = 0; j < Array.GetLength(1); j++)
                 {
-                    data[j] = Array[i][indexers[j]];
+                    data[j] = Array[i][indexerArray[j]];
                 }
 
-                series[i] = new Series(indexers, data);
+                series[i] = new Series(indexerArray, data);
             }
 
             SeriesArray seriesArray = new SeriesArray(series);
 
-            return new DataFrame(seriesArray, Headers, indexers);
+            return new DataFrame(seriesArray, Headers, indexerArray);
         }
 
         /// <summary>
@@ -124,27 +124,27 @@ namespace Neptune
         /// <summary>
         /// Get a DataFrame with only the columns specified by headers
         /// </summary>
-        /// <param name="headers">Array of strings representing the colums by headers</param>
+        /// <param name="headerArray">Array of strings representing the colums by headers</param>
         /// <returns>A DataFrame</returns>
-        public DataFrame this[string[] headers]
+        public DataFrame this[string[] headerArray]
         {
             get
             {
-                int[] indexArray = new int[headers.Length];
+                int[] indexArray = new int[headerArray.Length];
 
-                for (int i = 0; i < headers.Length; i++)
+                for (int i = 0; i < headerArray.Length; i++)
                 {
-                    if (!Headers.Contains(headers[i]))
-                        throw new IndexOutOfRangeException(string.Format("Headers dose not contain the index {0}", headers[i]));
+                    if (!Headers.Contains(headerArray[i]))
+                        throw new IndexOutOfRangeException(string.Format("Headers dose not contain the index {0}", headerArray[i]));
 
-                    var index = System.Array.FindIndex(Headers, x => x == headers[i]);
+                    var index = System.Array.FindIndex(Headers, x => x == headerArray[i]);
                     indexArray[i] = index;
                 }
 
-                string[] headerArray = new string[indexArray.Length];
+                string[] headers = new string[indexArray.Length];
                 for (int i = 0; i < indexArray.Length; i++)
                 {
-                    headerArray[i] = Headers[indexArray[i]];
+                    headers[i] = Headers[indexArray[i]];
                 }
 
                 // Instantiates a new SeriesArray that should hold the series.
@@ -157,7 +157,7 @@ namespace Neptune
                     seriesArray[i] = Array[indexArray[i]];
                 }
 
-                return new DataFrame(seriesArray, headerArray, Indexers);
+                return new DataFrame(seriesArray, headers, Indexers);
             }
         }
 
