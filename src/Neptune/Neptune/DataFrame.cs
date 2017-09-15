@@ -69,7 +69,52 @@ namespace Neptune
         }
 
         /// <summary>
-        /// Get a DataFrame with only the row specified by indexer
+        /// Get a DataFrame with one row specified with index
+        /// </summary>
+        /// <param name="index">Int representing the index of the row to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame ILoc(int index)
+        {
+            return ILoc(new int[] { index });
+        }
+
+        /// <summary>
+        /// Get a DataFrame with multiple rows specified by an array of indexes
+        /// </summary>
+        /// <param name="indexes">Array of int representing the indexes of the rows to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame ILoc(int[] indexArray)
+        {
+            // Create an array of stings that holds the indexers
+            string[] indexers = new string[indexArray.Length];
+            for (int i = 0; i < indexArray.Length; i++)
+            {
+                string indexer = Indexers[indexArray[i]];
+                if (!Indexers.Contains(indexer))
+                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexArray[i]));
+
+                indexers[i] = indexer;
+            }
+
+            Series[] series = new Series[Array.GetLength(1)];
+            for (int i = 0; i < indexers.Length; i++)
+            {
+                object[] data = new object[indexers.Length];
+                for (int j = 0; j < Array.GetLength(1); j++)
+                {
+                    data[j] = Array[i][indexers[j]];
+                }
+
+                series[i] = new Series(indexers, data);
+            }
+
+            SeriesArray seriesArray = new SeriesArray(series);
+
+            return new DataFrame(seriesArray, Headers, indexers);
+        }
+
+        /// <summary>
+        /// Get a DataFrame with only one row specified by indexer
         /// </summary>
         /// <param name="indexer">String representing indexer of row to get</param>
         /// <returns>A DataFrame</returns>
