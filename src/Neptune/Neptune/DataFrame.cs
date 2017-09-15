@@ -54,103 +54,29 @@ namespace Neptune
                     }
                 }
 
-                // Instantiates a new SeriesArray that should hold the series.
-                // The length should be the same as the length of indexes
-                SeriesArray seriesArray = new SeriesArray(indexArray.Length);
+                // Create an array of series thet should hold the data
+                // The number of Series should equal the number of rows in Array
+                Series[] series = new Series[Array.GetLength(0)];
 
-                // for each index that we wanna get, point the old series to the new array
-                for (int i = 0; i < indexArray.Length; i++)
+                // For each row in the array
+                for (int i = 0; i < Array.GetLength(0); i++)
                 {
-                    seriesArray[i] = Array[indexArray[i]];                 
+                    // Store the data of the columns we wan't, based on the indexArray passed to function
+                    object[] data = new object[indexArray.Length];
+                    for (int j = 0; j < indexArray.Length; j++)
+                    {
+                        data[j] = Array[i][indexArray[j]];
+                    }
+
+                    // Instanceate a new series(row) with the data(columns),
+                    series[i] = new Series(data);
                 }
+
+                // Instantiates a new SeriesArray with the series.
+                SeriesArray seriesArray = new SeriesArray(series);
 
                 return new DataFrame(seriesArray, headerArray, Indexers);
             }
-        }
-
-        /// <summary>
-        /// Get a DataFrame with one row specified with index
-        /// </summary>
-        /// <param name="index">Int representing the index of the row to get</param>
-        /// <returns>A DataFrame</returns>
-        public DataFrame ILoc(int index)
-        {
-            return ILoc(new int[] { index });
-        }
-
-        /// <summary>
-        /// Get a DataFrame with multiple rows specified by an array of indexes
-        /// </summary>
-        /// <param name="indexes">Array of int representing the indexes of the rows to get</param>
-        /// <returns>A DataFrame</returns>
-        public DataFrame ILoc(int[] indexArray)
-        {
-            // Create an array of stings that holds the indexers
-            string[] indexers = new string[indexArray.Length];
-            for (int i = 0; i < indexArray.Length; i++)
-            {
-                string indexer = Indexers[indexArray[i]];
-                if (!Indexers.Contains(indexer))
-                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexArray[i]));
-
-                indexers[i] = indexer;
-            }
-
-            Series[] series = new Series[Array.GetLength(1)];
-            for (int i = 0; i < indexers.Length; i++)
-            {
-                object[] data = new object[indexers.Length];
-                for (int j = 0; j < Array.GetLength(1); j++)
-                {
-                    data[j] = Array[i][indexers[j]];
-                }
-
-                series[i] = new Series(indexers, data);
-            }
-
-            SeriesArray seriesArray = new SeriesArray(series);
-
-            return new DataFrame(seriesArray, Headers, indexers);
-        }
-
-        /// <summary>
-        /// Get a DataFrame with only one row specified by indexer
-        /// </summary>
-        /// <param name="indexer">String representing indexer of row to get</param>
-        /// <returns>A DataFrame</returns>
-        public DataFrame Loc(string indexer)
-        {
-            return Loc(new string[] { indexer });
-        }
-
-        /// <summary>
-        /// Get a DataFrame woth only the rows specified by indexers
-        /// </summary>
-        /// <param name="indexerArray">Array of strings representing indexers of rows to get</param>
-        /// <returns>A DataFrame</returns>
-        public DataFrame Loc(string[] indexerArray)
-        {
-            for (int i = 0; i < indexerArray.Length; i++)
-            {
-                if (!Indexers.Contains(indexerArray[i]))
-                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexerArray[i]));
-            }
-
-            Series[] series = new Series[Array.GetLength(1)];
-            for (int i = 0; i < indexerArray.Length; i++)
-            {
-                object[] data = new object[indexerArray.Length];
-                for (int j = 0; j < Array.GetLength(1); j++)
-                {
-                    data[j] = Array[i][indexerArray[j]];
-                }
-
-                series[i] = new Series(indexerArray, data);
-            }
-
-            SeriesArray seriesArray = new SeriesArray(series);
-
-            return new DataFrame(seriesArray, Headers, indexerArray);
         }
 
         /// <summary>
@@ -186,24 +112,82 @@ namespace Neptune
                     indexArray[i] = index;
                 }
 
-                string[] headers = new string[indexArray.Length];
-                for (int i = 0; i < indexArray.Length; i++)
-                {
-                    headers[i] = Headers[indexArray[i]];
-                }
-
-                // Instantiates a new SeriesArray that should hold the series.
-                // The length should be the same as the length of indexes
-                SeriesArray seriesArray = new SeriesArray(indexArray.Length);
-
-                // for each index that we wanna get, point the old series to the new array
-                for (int i = 0; i < indexArray.Length; i++)
-                {
-                    seriesArray[i] = Array[indexArray[i]];
-                }
-
-                return new DataFrame(seriesArray, headers, Indexers);
+                return this[indexArray];
             }
+        }
+
+        /// <summary>
+        /// Get a DataFrame with only one row specified by indexer
+        /// </summary>
+        /// <param name="indexer">String representing indexer of row to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame Loc(string indexer)
+        {
+            return Loc(new string[] { indexer });
+        }
+
+        /// <summary>
+        /// Get a DataFrame woth only the rows specified by indexers
+        /// </summary>
+        /// <param name="indexerArray">Array of strings representing indexers of rows to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame Loc(string[] indexerArray)
+        {
+            int[] indexArray = new int[indexerArray.Length];
+            for (int i = 0; i < indexerArray.Length; i++)
+            {
+                if (!Indexers.Contains(indexerArray[i]))
+                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexerArray[i]));
+
+                indexArray[i] = System.Array.FindIndex(Indexers, x => x ==indexerArray[i]);
+            }
+
+            return ILoc(indexArray);
+        }
+
+        /// <summary>
+        /// Get a DataFrame with one row specified with index
+        /// </summary>
+        /// <param name="index">Int representing the index of the row to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame ILoc(int index)
+        {
+            return ILoc(new int[] { index });
+        }
+
+        /// <summary>
+        /// Get a DataFrame with multiple rows specified by an array of indexes
+        /// </summary>
+        /// <param name="indexes">Array of int representing the indexes of the rows to get</param>
+        /// <returns>A DataFrame</returns>
+        public DataFrame ILoc(int[] indexArray)
+        {
+            // Create an array of stings that holds the indexers
+            string[] indexers = new string[indexArray.Length];
+            for (int i = 0; i < indexArray.Length; i++)
+            {
+                string indexer = Indexers[indexArray[i]];
+                if (!Indexers.Contains(indexer))
+                    throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexArray[i]));
+
+                indexers[i] = indexer;
+            }
+
+            Series[] series = new Series[indexers.Length];
+            for (int i = 0; i < indexers.Length; i++)
+            {
+                object[] data = new object[Array.GetLength(1)];
+                for (int j = 0; j < Array.GetLength(1); j++)
+                {
+                    data[j] = Array[indexArray[i]][j];
+                }
+
+                series[i] = new Series(data);
+            }
+
+            SeriesArray seriesArray = new SeriesArray(series);
+
+            return new DataFrame(seriesArray, Headers, indexers);
         }
 
         /// <summary>
@@ -242,8 +226,7 @@ namespace Neptune
 
                 for (int j = 0; j < Array.GetLength(1); j++)
                 {
-                    string s = Indexers != null ? Indexers[i] : i.ToString();
-                    sb.Append(string.Format("{0}", Array[j][s]).PadLeft(padLeft));
+                    sb.Append(string.Format("{0}", Array[i][j]).PadLeft(padLeft));
                 }
 
                 sb.Append("\n");

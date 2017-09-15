@@ -7,70 +7,36 @@ namespace Neptune
 {
     public class Series
     {
-        private Dictionary<string, object> _data;
+        private object[] _data;
         
         public Series()
         {
-            _data = new Dictionary<string, object>();
+            _data = new object[0];
         }
 
-        public Series(string[] indexes = null, object[] data = null)
+        public Series(object[] data = null)
             : this()
         {
-            if (indexes != null && data != null && indexes.Length != data.Length)
+            if (data != null)
             {
-                throw new ArgumentException("The length of indexes is not equeal to the length of data");
-            }
-
-            if (indexes != null)
-            {
-                for (int i = 0; i < indexes.Length; i++)
-                {
-                    _data.Add(indexes[i], data != null ? data[i] : null);
-                }
-            }
-            else if (data != null)
-            {
-                for (int i = 0; i < data.Length; i++)
-                {
-                    _data.Add(i.ToString(), data[i]);
-                }
+                _data = data;
             }
         }
         
         /// <summary>
-        /// Get or set object by key
-        /// </summary>
-        /// <param name="key">key of object to get or set</param>
-        /// <returns></returns>
-        public object this[string key]
-        {
-            get
-            {
-                return _data[key];
-            }
-            set
-            {
-                _data[key] = value;
-            }
-        }
-
-        /// <summary>
         /// Get or set object by index
         /// </summary>
-        /// <param name="i">index of object to get or set</param>
-        /// <returns>object</returns>
+        /// <param name="index">key of object to get or set</param>
+        /// <returns></returns>
         public object this[int index]
         {
             get
             {
-                string key = _data.Keys.ToArray()[index];
-                return _data[key];
+                return _data[index];
             }
             set
             {
-                string key = _data.Keys.ToArray()[index];
-                _data[key] = value;
+                _data[index] = value;
             }
         }
 
@@ -81,7 +47,7 @@ namespace Neptune
         {
             get
             {
-                return _data.Count;
+                return _data.Length;
             }
         }
     }

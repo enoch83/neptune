@@ -38,14 +38,16 @@ namespace Neptune
         /// <summary>
         /// Get the length of the array
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="index">0 = vertical, 1 = horizontal</param>
+        /// <returns>Length of array</returns>
         public int GetLength(int index)
         {
             if (index == 0)
-                return _array[index].Length; 
-            else
-                return _array.Length;
+                return _array.Length; 
+            else if(index == 1)
+                return _array[0].Length;
+
+            throw new ArgumentException("Possible values is 0 and 1");
         }
     }
 }
