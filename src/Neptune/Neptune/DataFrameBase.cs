@@ -8,13 +8,13 @@ namespace Neptune
     {
         private T _array;
         private string[] _headers;
-        private string[] _indexes;
+        private string[] _indexers;
 
-        public DataFrameBase(T array, string[] headers = null, string[] indexes = null)
+        public DataFrameBase(T array, string[] headers = null, string[] indexers = null)
         {
             _array = array;
             _headers = headers;
-            _indexes = indexes;
+            _indexers = indexers;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Neptune
         {
             get
             {
-                return _indexes;
+                return _indexers;
             }
         }
     }
