@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Neptune
 {
@@ -10,6 +11,9 @@ namespace Neptune
 
         public SeriesArray(Series[] array)
         {
+            if (array.Any(a => a.Length != array[0].Length))
+                throw new ArgumentException("arrays cn't have different lengths");
+            
             _array = array ?? throw new ArgumentNullException("array can't be null");
         }
 
@@ -37,12 +41,13 @@ namespace Neptune
         /// <returns>Length of array</returns>
         public int GetLength(int index)
         {
+            if (index < 0 || index > 1)
+                throw new IndexOutOfRangeException("possible values of index is 0 and 1");
+
             if (index == 0)
                 return _array.Length; 
-            else if(index == 1)
+            else 
                 return _array[0].Length;
-
-            throw new ArgumentException("Possible values is 0 and 1");
         }
     }
 }
