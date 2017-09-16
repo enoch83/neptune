@@ -10,7 +10,7 @@ namespace Neptune
 
         public SeriesArray(Series[] array)
         {
-            _array = array;
+            _array = array ?? throw new ArgumentNullException("array can't be null");
         }
 
         /// <summary>

@@ -11,10 +11,7 @@ namespace Neptune
 
         public Series(object[] data)
         {
-            if (data == null)
-                throw new ArgumentNullException("data can't be null");
-
-            _data = data;
+            _data = data ?? throw new ArgumentNullException("data can't be null");
         }
         
         /// <summary>
