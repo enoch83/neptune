@@ -8,7 +8,7 @@ namespace Neptune.Tests
     public class SeriesTests
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "data can't be null")]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void Given_Initiating_When_DataIsNull_Then_ThrowsException()
         {
             // Arrange , Act, Assert
@@ -23,9 +23,10 @@ namespace Neptune.Tests
 
             // Act
             Series s = new Series(data);
+            var length = s.Length;
 
             // Assert
-            Assert.IsTrue(s.Length == data.Length);
+            Assert.AreEqual(length, data.Length);
         }
 
         [TestMethod]
@@ -36,9 +37,10 @@ namespace Neptune.Tests
 
             // Act
             Series s = new Series(data);
+            var obj = s[1];
 
             // Assert
-            Assert.AreEqual(data[1], s[1]);
+            Assert.AreEqual(obj, data[1]);
         }
     }
 }
