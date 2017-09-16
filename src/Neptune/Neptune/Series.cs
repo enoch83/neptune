@@ -5,12 +5,15 @@ using System.Linq;
 
 namespace Neptune
 {
-    public struct Series
+    public class Series
     {
         private object[] _data;
 
         public Series(object[] data)
         {
+            if (data == null)
+                throw new ArgumentNullException("data can't be null");
+
             _data = data;
         }
         
