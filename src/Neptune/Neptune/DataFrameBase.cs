@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Neptune
 {
-    public abstract class DataFrameBase<T>
+    public abstract class DataFrameBase
     {
-        private T _array;
+        private SeriesArray _array;
         private string[] _headers;
         private string[] _indexers;
 
-        public DataFrameBase(T array, string[] headers = null, string[] indexers = null)
+        public DataFrameBase(SeriesArray array, string[] headers = null, string[] indexers = null)
         {
             _array = array;
             _headers = headers;
-            _indexers = indexers;
+            _indexers = indexers ?? Enumerable.Range(0, array.GetLength(0)).Select(s => s.ToString()).ToArray();
         }
 
         /// <summary>
         /// Get the arrays of the DataFrame
         /// </summary>
-        internal T Array
+        internal SeriesArray Array
         {
             get
             {

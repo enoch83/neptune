@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Neptune
 {
-    public partial class DataFrame : DataFrameBase<SeriesArray>
+    public partial class DataFrame : DataFrameBase
     {
         public DataFrame(SeriesArray series, string[] headers = null, string[] indexers = null)
             : base(series, headers, indexers)
