@@ -15,9 +15,10 @@ namespace Neptune.Helpers
         /// <param name="separator">char representing seperator used to define columns</param>
         /// <param name="skipRows">Number of rows to skip when reading, start at 1</param>
         /// <param name="headerRow">Index pointing at what row to use as header</param>
-        /// <param name="indexColumn">Index pointing at what column to use as indexers</param>
+        /// <param name="indexerColumn">Index pointing at what column to use as indexers</param>
+        /// <param name="includeNullRows">True/False if rows where all values is null should be included</param>
         /// <returns>A DataFrame</returns>
-        public static DataFrame ReadCsv(string filePath, char separator = ';', int skipRows = 0, int? headerRow = null, int? indexColumn = null)
+        public static DataFrame ReadCsv(string filePath, int? headerRow = null, int? indexerColumn = null, char separator = ';', int skipRows = 0, bool includeNullRows = true)
         {
             int numerOfRows = 0;
             var AllLines = new string[10000]; //only allocate memory here
@@ -37,10 +38,10 @@ namespace Neptune.Helpers
             }
 
             // Get the number of columns
-            int numberOfColumns = AllLines[headerRow != null ? (int)headerRow : 0].Split(separator).Length - (indexColumn != null ? 1 : 0);
+            int numberOfColumns = AllLines[headerRow != null ? (int)headerRow : 0].Split(separator).Length - (indexerColumn != null ? 1 : 0);
 
             string[] headers = null;
-            string[] indexes = indexColumn != null ? new string[numerOfRows - skipRows - 1] : null;
+            string[] indexes = indexerColumn != null ? new string[numerOfRows - skipRows - 1] : null;
 
             Series[] series = new Series[headerRow != null ? numerOfRows - 1 : numerOfRows];
 
@@ -52,9 +53,9 @@ namespace Neptune.Helpers
                 {
                     headers = line;
 
-                    if (indexColumn != null)
+                    if (indexerColumn != null)
                     {
-                        headers = headers.Where((source, index) => index != (int)indexColumn).ToArray();
+                        headers = headers.Where((source, index) => index != (int)indexerColumn).ToArray();
                     }
                 }
                 else
@@ -62,15 +63,18 @@ namespace Neptune.Helpers
                     object[] data = new object[numberOfColumns];
                     for (int j = 0; j < line.Length; j++)
                     {
-                        if (indexColumn != null && j == indexColumn)
+                        if (indexerColumn != null && j == indexerColumn)
                         {
                             indexes[headerRow != null ? i - 1 : i] = line[j];
                         }
                         else
                         {
-                            data[j] = line[j];
+                            data[indexerColumn != null ? j - 1 : j] = line[j];
                         }
                     }
+
+                    if (!includeNullRows && data.All(d => d == null))
+                        continue;
 
                     series[headerRow != null ? i - 1 : i] = new Series(data);
                 }
