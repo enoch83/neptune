@@ -1,7 +1,7 @@
 ﻿using Neptune.Helpers;
 using System;
 
-namespace Neptune.ReadCsvExample
+namespace Neptune.Examples.ReadCsv
 {
     class Program
     {

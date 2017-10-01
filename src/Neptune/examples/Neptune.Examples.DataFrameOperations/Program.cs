@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Neptune.DataFrameOperatorsExample
+namespace Neptune.Examples.DataFrameOperators
 {
     class Program
     {
