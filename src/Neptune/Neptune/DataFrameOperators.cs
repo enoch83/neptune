@@ -21,8 +21,10 @@ namespace Neptune
             for (int i = 0; i < df1.Array.GetLength(0); i++)
             {
                 double df1Value = 0, df2Value = 0;
-                double.TryParse(df1.Array[i][0].ToString(), out df1Value);
-                double.TryParse(df2.Array[i][0].ToString(), out df2Value);
+                if (df1.Array[i][0] != null)
+                    double.TryParse(df1.Array[i][0].ToString(), out df1Value);
+                if (df2.Array[i][0] != null)
+                    double.TryParse(df2.Array[i][0].ToString(), out df2Value);
 
                 series[i] = new Series(new object[] { Math.Round(df1Value + df2Value, 2) });
             }
@@ -43,8 +45,10 @@ namespace Neptune
             for (int i = 0; i < df1.Array.GetLength(0); i++)
             {
                 double df1Value = 0, df2Value = 0;
-                double.TryParse(df1.Array[i][0].ToString(), out df1Value);
-                double.TryParse(df2.Array[i][0].ToString(), out df2Value);
+                if (df1.Array[i][0] != null)
+                    double.TryParse(df1.Array[i][0].ToString(), out df1Value);
+                if (df2.Array[i][0] != null)
+                    double.TryParse(df2.Array[i][0].ToString(), out df2Value);
 
                 series[i] = new Series(new object[] { Math.Round(df1Value - df2Value, 2) });
             }
@@ -63,8 +67,10 @@ namespace Neptune
             for (int i = 0; i < df1.Array.GetLength(0); i++)
             {
                 double df1Value = 0, df2Value = 0;
-                double.TryParse(df1.Array[i][0].ToString(), out df1Value);
-                double.TryParse(df2.Array[i][0].ToString(), out df2Value);
+                if (df1.Array[i][0] != null)
+                    double.TryParse(df1.Array[i][0].ToString(), out df1Value);
+                if (df2.Array[i][0] != null)
+                    double.TryParse(df2.Array[i][0].ToString(), out df2Value);
 
                 series[i] = new Series(new object[] { Math.Round(df1Value * df2Value, 2) });
             }
@@ -83,8 +89,10 @@ namespace Neptune
             for (int i = 0; i < df1.Array.GetLength(0); i++)
             {
                 double df1Value = 0, df2Value = 0;
-                double.TryParse(df1.Array[i][0].ToString(), out df1Value);
-                double.TryParse(df2.Array[i][0].ToString(), out df2Value);
+                if (df1.Array[i][0] != null)
+                    double.TryParse(df1.Array[i][0].ToString(), out df1Value);
+                if (df2.Array[i][0] != null)
+                    double.TryParse(df2.Array[i][0].ToString(), out df2Value);
 
                 series[i] = new Series(new object[] { Math.Round(df1Value / df2Value, 2) });
             }
@@ -103,8 +111,10 @@ namespace Neptune
             for (int i = 0; i < df1.Array.GetLength(0); i++)
             {
                 double df1Value = 0, df2Value = 0;
-                double.TryParse(df1.Array[i][0].ToString(), out df1Value);
-                double.TryParse(df2.Array[i][0].ToString(), out df2Value);
+                if (df1.Array[i][0] != null)
+                    double.TryParse(df1.Array[i][0].ToString(), out df1Value);
+                if (df2.Array[i][0] != null)
+                    double.TryParse(df2.Array[i][0].ToString(), out df2Value);
 
                 series[i] = new Series(new object[] { df1Value > df2Value });
             }
@@ -123,8 +133,10 @@ namespace Neptune
             for (int i = 0; i < df1.Array.GetLength(0); i++)
             {
                 double df1Value = 0, df2Value = 0;
-                double.TryParse(df1.Array[i][0].ToString(), out df1Value);
-                double.TryParse(df2.Array[i][0].ToString(), out df2Value);
+                if (df1.Array[i][0] != null)
+                    double.TryParse(df1.Array[i][0].ToString(), out df1Value);
+                if (df2.Array[i][0] != null)
+                    double.TryParse(df2.Array[i][0].ToString(), out df2Value);
 
                 series[i] = new Series(new object[] { df1Value < df2Value });
             }
@@ -142,7 +154,8 @@ namespace Neptune
                 throw new ArgumentOutOfRangeException("Length of DataFrame must by 1, try double[].");
 
             double value = 0;
-            double.TryParse(df.Array[0][0].ToString(), out value);
+            if (df.Array[0][0] != null)
+                double.TryParse(df.Array[0][0].ToString(), out value);
 
             return value;
         }
