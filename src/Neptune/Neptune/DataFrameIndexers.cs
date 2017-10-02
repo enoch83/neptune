@@ -32,7 +32,7 @@ namespace Neptune
                 string[] headerArray = null;
 
                 // If headers of this DataFrame not null, we should add the correspoing headers to the new Dataframe
-                if (Headers != null)
+                if (Headers.Length > 0)
                 {
                     // Instantiates a new array of string
                     // Array should hold the headers
@@ -97,6 +97,9 @@ namespace Neptune
         {
             get
             {
+                if (Headers.Length == 0)
+                    throw new IndexOutOfRangeException("Headers dose not contain the index");
+
                 int[] indexArray = new int[headerArray.Length];
 
                 for (int i = 0; i < headerArray.Length; i++)

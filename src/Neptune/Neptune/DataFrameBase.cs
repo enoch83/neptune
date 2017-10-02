@@ -14,7 +14,7 @@ namespace Neptune
         public DataFrameBase(SeriesArray array, string[] headers = null, string[] indexers = null)
         {
             _array = array;
-            _headers = headers;
+            _headers = headers ?? new string[0];
             _indexers = indexers ?? Enumerable.Range(0, array.GetLength(0)).Select(s => s.ToString()).ToArray();
         }
 

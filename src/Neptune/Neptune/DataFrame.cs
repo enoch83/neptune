@@ -61,11 +61,10 @@ namespace Neptune
             string[] indexers = new string[indexArray.Length];
             for (int i = 0; i < indexArray.Length; i++)
             {
-                string indexer = Indexers[indexArray[i]];
-                if (!Indexers.Contains(indexer))
+                if (!Indexers.Contains(indexArray[i].ToString()))
                     throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexArray[i]));
 
-                indexers[i] = indexer;
+                indexers[i] = Indexers[indexArray[i]];
             }
 
             Series[] series = new Series[indexers.Length];
@@ -95,7 +94,7 @@ namespace Neptune
 
             int padLeft = 12;
 
-            if (Headers != null)
+            if (Headers.Length > 0)
             {
                 padLeft = Headers.Max(a => a.Length) + 2 > 12 ? Headers.Max(a => a.Length) + 2 : 12;
                 
@@ -128,6 +127,25 @@ namespace Neptune
             }
 
             return sb.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            // If parameter is null return false.
+            if (obj == null)
+            {
+                return false;
+            }
+
+            // If parameter cannot be cast to Point return false.
+            DataFrame df = obj as DataFrame;
+            if ((System.Object)df == null)
+            {
+                return false;
+            }
+
+            // Return true if the fields match:
+            return (this.Array == df.Array) && (this.Headers == df.Headers);// && (this.Indexers == df.Indexers);
         }
     }
 }
