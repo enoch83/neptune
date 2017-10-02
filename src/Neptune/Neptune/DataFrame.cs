@@ -61,7 +61,7 @@ namespace Neptune
             string[] indexers = new string[indexArray.Length];
             for (int i = 0; i < indexArray.Length; i++)
             {
-                if (!Indexers.Contains(indexArray[i].ToString()))
+                if (Indexers.Length < indexArray[i])
                     throw new IndexOutOfRangeException(string.Format("Indexers dose not contain the index {0}", indexArray[i]));
 
                 indexers[i] = Indexers[indexArray[i]];
@@ -95,11 +95,11 @@ namespace Neptune
                 object[] data = new object[1];
                 if (shift < 0)
                 {
-                    data[0] = (i - shift < Array.GetLength(0)) ? Array[i - shift][0] : null;
+                    data[0] = (i - shift < Array.GetLength(0)) ? Array[i - shift][0] : 0;
                 }
                 else
                 {
-                    data[0] = (i >= shift) ? Array[i- shift][0] : null;
+                    data[0] = (i >= shift) ? Array[i- shift][0] : 0;
                 }
                     
                 series[i] = new Series(data);
@@ -153,6 +153,48 @@ namespace Neptune
             }
 
             return sb.ToString();
+        }
+
+        public DataFrame Tail(int count = 5)
+        {
+            string[] indexers = new string[count];
+            Series[] series = new Series[count];
+            for (int i = Array.GetLength(0) - count; i < Array.GetLength(0); i++)
+            {
+                object[] data = new object[Array.GetLength(1)];
+                for (int j = 0; j < Array.GetLength(1); j++)
+                {
+                    data[j] = Array[i][j];
+                }
+
+                series[i - Array.GetLength(0) + count] = new Series(data);
+                indexers[i - Array.GetLength(0) + count] = Indexers[i];
+            }
+
+            SeriesArray seriesArray = new SeriesArray(series);
+
+            return new DataFrame(seriesArray, Headers, indexers);
+        }
+
+        public DataFrame Head(int count = 5)
+        {
+            string[] indexers = new string[count];
+            Series[] series = new Series[count];
+            for (int i = 0; i < count; i++)
+            {
+                object[] data = new object[Array.GetLength(1)];
+                for (int j = 0; j < Array.GetLength(1); j++)
+                {
+                    data[j] = Array[i][j]; 
+                }
+
+                series[i] = new Series(data);
+                indexers[i] = Indexers[i];
+            }
+
+            SeriesArray seriesArray = new SeriesArray(series);
+
+            return new DataFrame(seriesArray, Headers, indexers);
         }
     }
 }
