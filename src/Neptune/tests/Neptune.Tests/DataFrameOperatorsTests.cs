@@ -35,7 +35,7 @@ namespace Neptune.Tests
         public void Given_TwoDataFramesWithTwoColumns_When_AdditionAndCastToDouble_Then_ThrowsException()
         {
             // Act
-            double actual = df3 + df4;
+            double actual = (double)(df3 + df4);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace Neptune.Tests
             double expected = 30;
 
             // Act
-            double actual = df1 + df2;
+            double actual = (double)(df1 + df2);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -59,7 +59,7 @@ namespace Neptune.Tests
             double value = 20;
 
             // Act
-            double actual = df1 + value;
+            double actual = (double)df1 + value;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -72,7 +72,7 @@ namespace Neptune.Tests
             double[] expected = new double[] { 30, 60 };
 
             // Act
-            double[] actual = df3 + df4;
+            double[] actual = (double[])(df3 + df4);
 
             // Assert
             Assert.AreEqual(expected.Length, actual.Length);
