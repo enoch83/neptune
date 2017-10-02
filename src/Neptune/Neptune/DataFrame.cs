@@ -84,6 +84,32 @@ namespace Neptune
             return new DataFrame(seriesArray, Headers, indexers);
         }
 
+        public DataFrame Shift(int shift)
+        {
+            if (shift == 0)
+                throw new ArgumentOutOfRangeException("Shift must be positive or negative, not zero");
+
+            Series[] series = new Series[Array.GetLength(0)];
+            for (int i = 0; i < Array.GetLength(0); i++)
+            {
+                object[] data = new object[1];
+                if (shift < 0)
+                {
+                    data[0] = (i - shift < Array.GetLength(0)) ? Array[i - shift][0] : null;
+                }
+                else
+                {
+                    data[0] = (i >= shift) ? Array[i- shift][0] : null;
+                }
+                    
+                series[i] = new Series(data);
+            }
+
+            SeriesArray seriesArray = new SeriesArray(series);
+
+            return new DataFrame(seriesArray, Headers, Indexers);
+        }
+
         /// <summary>
         /// Overridden ToStrint()
         /// </summary>
