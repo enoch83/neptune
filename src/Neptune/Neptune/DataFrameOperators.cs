@@ -153,7 +153,8 @@ namespace Neptune
             for (int i = 0; i < df.Array.GetLength(0); i++)
             {
                 double value = 0;
-                double.TryParse(df.Array[i][0].ToString(), out value);
+                if (df.Array[i][0] != null)
+                    double.TryParse(df.Array[i][0].ToString(), out value);
 
                 values[i] = value;
             }
